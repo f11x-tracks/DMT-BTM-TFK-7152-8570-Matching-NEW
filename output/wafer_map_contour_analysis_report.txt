@@ -1,0 +1,68 @@
+================================================================================
+WAFER MAP ANALYSIS SUMMARY REPORT - CONTOUR VERSION
+================================================================================
+
+DATASET OVERVIEW:
+----------------------------------------
+DMT-TFK Comparisons: 31 matched pairs
+  Wafers: AANBD205TEA1
+BTM-DMT Comparisons: 31 matched pairs
+  Wafers: AANBD228TEH1
+BTM-TFK Comparisons: 32 matched pairs
+  Wafers: AANBD228TEH1
+
+LOCATION ANALYSIS:
+----------------------------------------
+Total measurement locations analyzed: 94
+
+DMT-TFK - Top 5 Highest Delta Locations:
+  (-135.0,   57.0) mm:   -52.4 ±   nan Å
+  ( -57.0,  135.0) mm:   -51.5 ±   nan Å
+  (-135.0,  -57.0) mm:   -49.2 ±   nan Å
+  ( -57.0, -135.0) mm:   -45.5 ±   nan Å
+  (  57.0, -135.0) mm:   -38.6 ±   nan Å
+
+BTM-DMT - Top 5 Highest Delta Locations:
+  ( -57.9,  136.2) mm:    47.2 ±   nan Å
+  (-136.2,   57.9) mm:    45.9 ±   nan Å
+  (-136.2,  -57.9) mm:    40.4 ±   nan Å
+  ( -57.9, -136.2) mm:    37.4 ±   nan Å
+  (  57.9, -136.2) mm:    32.7 ±   nan Å
+
+BTM-TFK - Top 5 Highest Delta Locations:
+  (-136.2,  -57.9) mm:    -8.9 ±   nan Å
+  ( -57.9, -136.2) mm:    -8.1 ±   nan Å
+  ( -96.5,   96.5) mm:     7.3 ±   nan Å
+  ( 136.2,   19.3) mm:     7.1 ±   nan Å
+  (   0.0,  127.4) mm:     6.5 ±   nan Å
+
+TOOL STATISTICS BY WAFER:
+----------------------------------------
+
+BTM Tool:
+  AANBD228TEH1:  8576.3 ±  24.2 Å (31 points)
+  AANBD228TEH1:  8577.3 ±  24.4 Å (32 points)
+
+DMT Tool:
+  AANBD205TEA1:  8577.4 ±  19.9 Å (31 points)
+
+TFK Tool:
+  AANBD205TEA1:  8574.0 ±  28.1 Å (31 points)
+  AANBD228TEH1:  8575.0 ±  28.2 Å (32 points)
+
+CONTOUR PLOT FEATURES:
+----------------------------------------
+• Smooth interpolated surfaces showing spatial trends
+• White dots overlay showing actual measurement locations
+• Contour lines with value labels for precise reading
+• Color scales optimized for each measurement type
+• High delta locations marked with yellow stars
+
+COORDINATE SYSTEM NOTES:
+----------------------------------------
+• Each thickness map uses its tool's native coordinate system
+• TFK thickness maps now use TFK coordinates for consistency
+• Different tool comparisons may include different measurement subsets
+• This is expected due to different matching criteria and algorithms
+
+================================================================================

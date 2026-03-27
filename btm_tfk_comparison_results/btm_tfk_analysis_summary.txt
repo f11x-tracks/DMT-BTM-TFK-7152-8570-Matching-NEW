@@ -1,0 +1,12 @@
+BTM vs TFK Thickness Comparison Analysis
+==================================================
+
+Total matched pairs: 128
+Unique wafers: 4
+Mean thickness delta (BTM - TFK): 2.230 ± 4.821 Å
+Median delta: 3.770 Å
+Delta range: -12.820 to 9.270 Å
+25th percentile: 0.322 Å
+75th percentile: 5.502 Å
+Mean matching distance: 0.043 mm
+Distance threshold used: 4.0 mm
