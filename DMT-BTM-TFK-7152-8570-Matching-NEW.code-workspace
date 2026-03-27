@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../DMT-BTM-TFK-7152-8570-Matching/btm_dmt_comparison_results"
+		},
+		{
+			"path": "../DMT-BTM-TFK-7152-8570-Matching/btm_tfk_comparison_results"
+		},
+		{
+			"path": "../DMT-BTM-TFK-7152-8570-Matching/rankings"
+		}
+	],
+	"settings": {}
+}
