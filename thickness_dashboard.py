@@ -18,23 +18,15 @@ warnings.filterwarnings('ignore')
 
 # Load data
 try:
-    df = pd.read_csv('output/matched_thickness_data.csv')
+    df = pd.read_csv('matched_thickness_data.csv')
     print(f"Loaded {len(df)} matched measurement pairs")
 except FileNotFoundError:
-    print("Error: output/matched_thickness_data.csv not found. Please run the thickness comparison app first.")
+    print("Error: matched_thickness_data.csv not found. Please run the thickness comparison app first.")
     exit(1)
 
 # Create site coordinates for trend analysis (combining X,Y into site identifier)
 df['Site'] = df['TFK_X_mm'].round(0).astype(str) + ',' + df['TFK_Y_mm'].round(0).astype(str)
 df['Site_ID'] = df.groupby(['TFK_X_mm', 'TFK_Y_mm']).ngroup()
-
-# Calculate radius from center (0,0) for radial analysis
-df['Radius_mm'] = np.sqrt(df['TFK_X_mm']**2 + df['TFK_Y_mm']**2)
-
-# Calculate mean delta and adjust DMT thickness
-mean_delta = df['Thickness_Delta'].mean()
-mean_abs_delta = abs(mean_delta)
-df['DMT_Adjusted'] = df['DMT_Thickness'] + mean_abs_delta
 
 # Calculate radius from center (0,0) for radial analysis
 df['Radius_mm'] = np.sqrt(df['TFK_X_mm']**2 + df['TFK_Y_mm']**2)

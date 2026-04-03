@@ -24,117 +24,28 @@ class WaferMapAnalysis:
         self.location_summary = None
         self.tool_wafer_summary = None
         
-    def aggregate_duplicate_coordinates(self, data, x_col, y_col, thickness_cols, other_cols=None):
-        """Aggregate measurements at duplicate coordinates by averaging thickness values
-        
-        This fixes issues where multiple measurements exist at the same location,
-        which can cause incorrect delta calculations and analysis.
-        
-        Args:
-            data: DataFrame with measurement data
-            x_col, y_col: Column names for X,Y coordinates
-            thickness_cols: List of thickness column names to average
-            other_cols: List of other columns to include (first value kept)
-        
-        Returns:
-            DataFrame with unique coordinates and averaged thickness values
-        """
-        if data is None or len(data) == 0:
-            return data
-            
-        # Group by coordinates
-        group_cols = [x_col, y_col]
-        
-        # Prepare aggregation dictionary
-        agg_dict = {}
-        
-        # Average thickness values at duplicate coordinates
-        for col in thickness_cols:
-            if col in data.columns:
-                agg_dict[col] = 'mean'
-        
-        # Keep first value for other columns (like WaferID)
-        if other_cols:
-            for col in other_cols:
-                if col in data.columns:
-                    agg_dict[col] = 'first'
-        
-        # Apply aggregation
-        original_count = len(data)
-        aggregated = data.groupby(group_cols).agg(agg_dict).reset_index()
-        
-        if original_count != len(aggregated):
-            print(f"  → Coordinate aggregation applied: {original_count} -> {len(aggregated)} unique locations")
-        
-        return aggregated
-        
     def load_all_data(self):
-        """Load all comparison datasets and apply coordinate aggregation"""
+        """Load all comparison datasets"""
         print("Loading comparison datasets...")
         
         # Load DMT-TFK comparison (main matched data)
         try:
-            raw_data = pd.read_csv('output/matched_thickness_data.csv')
-            print(f"Loaded {len(raw_data)} DMT-TFK raw matched pairs")
-            
-            # Aggregate duplicate coordinates to fix thickness value issues
-            self.dmt_tfk_data = self.aggregate_duplicate_coordinates(
-                raw_data, 
-                x_col='DMT_X_mm', 
-                y_col='DMT_Y_mm',
-                thickness_cols=['DMT_Thickness', 'TFK_Thickness'],
-                other_cols=['WaferID']
-            )
-            
-            # Recalculate thickness delta on aggregated data
-            if self.dmt_tfk_data is not None and len(self.dmt_tfk_data) > 0:
-                self.dmt_tfk_data['Thickness_Delta'] = self.dmt_tfk_data['DMT_Thickness'] - self.dmt_tfk_data['TFK_Thickness']
-                print(f"Final DMT-TFK dataset: {len(self.dmt_tfk_data)} unique coordinate pairs")
-                
+            self.dmt_tfk_data = pd.read_csv('output/matched_thickness_data.csv')
+            print(f"Loaded {len(self.dmt_tfk_data)} DMT-TFK matched pairs")
         except FileNotFoundError:
             print("Warning: output/matched_thickness_data.csv not found")
             
         # Load BTM-DMT comparison
         try:
-            raw_data = pd.read_csv('btm_dmt_comparison_results/btm_dmt_matched_data.csv')
-            print(f"Loaded {len(raw_data)} BTM-DMT raw matched pairs")
-            
-            # Aggregate duplicate coordinates
-            self.btm_dmt_data = self.aggregate_duplicate_coordinates(
-                raw_data,
-                x_col='BTM_X_mm',
-                y_col='BTM_Y_mm', 
-                thickness_cols=['BTM_Thickness', 'DMT_Thickness'],
-                other_cols=['WaferID']
-            )
-            
-            # Recalculate thickness delta on aggregated data
-            if self.btm_dmt_data is not None and len(self.btm_dmt_data) > 0:
-                self.btm_dmt_data['Thickness_Delta'] = self.btm_dmt_data['BTM_Thickness'] - self.btm_dmt_data['DMT_Thickness']
-                print(f"Final BTM-DMT dataset: {len(self.btm_dmt_data)} unique coordinate pairs")
-                
+            self.btm_dmt_data = pd.read_csv('btm_dmt_comparison_results/btm_dmt_matched_data.csv')
+            print(f"Loaded {len(self.btm_dmt_data)} BTM-DMT matched pairs")
         except FileNotFoundError:
             print("Warning: btm_dmt_matched_data.csv not found")
             
         # Load BTM-TFK comparison
         try:
-            raw_data = pd.read_csv('btm_tfk_comparison_results/btm_tfk_matched_data.csv')
-            print(f"Loaded {len(raw_data)} BTM-TFK raw matched pairs")
-            
-            # Aggregate duplicate coordinates
-            self.btm_tfk_data = self.aggregate_duplicate_coordinates(
-                raw_data,
-                x_col='BTM_X_mm', 
-                y_col='BTM_Y_mm',
-                thickness_cols=['BTM_Thickness', 'TFK_Thickness'],
-                other_cols=['WaferID']
-            )
-            
-            # Recalculate thickness delta on aggregated data
-            if self.btm_tfk_data is not None and len(self.btm_tfk_data) > 0:
-                self.btm_tfk_data['Thickness_Delta'] = self.btm_tfk_data['BTM_Thickness'] - self.btm_tfk_data['TFK_Thickness']
-                print(f"Final BTM-TFK dataset: {len(self.btm_tfk_data)} unique coordinate pairs")
-                
+            self.btm_tfk_data = pd.read_csv('btm_tfk_comparison_results/btm_tfk_matched_data.csv')
+            print(f"Loaded {len(self.btm_tfk_data)} BTM-TFK matched pairs")
         except FileNotFoundError:
             print("Warning: btm_tfk_matched_data.csv not found")
     
@@ -277,40 +188,6 @@ class WaferMapAnalysis:
                 tool_data.append({
                     'WaferID': row['WaferID'],
                     'Tool': 'BTM',
-                    'Mean_Thickness': row['Mean_Thickness'],
-                    'Std_Thickness': row['Std_Thickness'],
-                    'Count': row['Count']
-                })
-        
-        # Process BTM-TFK data for additional BTM and TFK statistics
-        if self.btm_tfk_data is not None:
-            # BTM statistics from BTM-TFK comparison
-            btm_tfk_btm_stats = self.btm_tfk_data.groupby('WaferID').agg({
-                'BTM_Thickness': ['mean', 'std', 'count']
-            }).round(2)
-            btm_tfk_btm_stats.columns = ['Mean_Thickness', 'Std_Thickness', 'Count']
-            btm_tfk_btm_stats = btm_tfk_btm_stats.reset_index()
-            
-            for _, row in btm_tfk_btm_stats.iterrows():
-                tool_data.append({
-                    'WaferID': row['WaferID'],
-                    'Tool': 'BTM',
-                    'Mean_Thickness': row['Mean_Thickness'],
-                    'Std_Thickness': row['Std_Thickness'],
-                    'Count': row['Count']
-                })
-            
-            # TFK statistics from BTM-TFK comparison
-            btm_tfk_tfk_stats = self.btm_tfk_data.groupby('WaferID').agg({
-                'TFK_Thickness': ['mean', 'std', 'count']
-            }).round(2)
-            btm_tfk_tfk_stats.columns = ['Mean_Thickness', 'Std_Thickness', 'Count']
-            btm_tfk_tfk_stats = btm_tfk_tfk_stats.reset_index()
-            
-            for _, row in btm_tfk_tfk_stats.iterrows():
-                tool_data.append({
-                    'WaferID': row['WaferID'],
-                    'Tool': 'TFK',
                     'Mean_Thickness': row['Mean_Thickness'],
                     'Std_Thickness': row['Std_Thickness'],
                     'Count': row['Count']
@@ -609,17 +486,42 @@ class WaferMapAnalysis:
             )
         
         # Plot 5: Offset-corrected delta contour map
-        xi, yi, zi_corrected = self.create_contour_grid(x_data, y_data, data['Corrected_Delta'])
+        # Aggregate duplicate coordinates by averaging corrected delta values
+        corrected_delta_df = pd.DataFrame({
+            'x': x_data,
+            'y': y_data,
+            'corrected_delta': data['Corrected_Delta']
+        })
+        corrected_delta_aggregated = corrected_delta_df.groupby(['x', 'y'])['corrected_delta'].mean().reset_index()
+        corrected_x_data = corrected_delta_aggregated['x']
+        corrected_y_data = corrected_delta_aggregated['y']
+        corrected_delta_data = corrected_delta_aggregated['corrected_delta']
+        print(f"  Corrected delta coordinates aggregated: {len(data)} -> {len(corrected_delta_aggregated)} unique locations")
+        
+        xi, yi, zi_corrected = self.create_contour_grid(corrected_x_data, corrected_y_data, corrected_delta_data)
+        
+        # Calculate symmetric range around zero for proper positive/negative visualization
+        max_abs_corrected = max(abs(corrected_delta_data.min()), abs(corrected_delta_data.max()))
+        
         fig.add_trace(
             go.Contour(
                 x=xi,
                 y=yi,
                 z=zi_corrected,
                 colorscale='RdBu_r',
-                colorbar=dict(title="Corrected Delta (Å)", x=0.97, len=0.4, y=0.225),
+                zmid=0,  # Center the colorscale at zero
+                zmin=-max_abs_corrected,  # Symmetric range
+                zmax=max_abs_corrected,   # Symmetric range
+                colorbar=dict(
+                    title="Corrected Delta (Å)<br><span style='font-size:8px'>Red=Positive<br>Blue=Negative</span>", 
+                    x=0.97, len=0.4, y=0.225
+                ),
                 contours=dict(
                     showlabels=True,
-                    labelfont=dict(size=8, color='black')
+                    labelfont=dict(size=8, color='white'),
+                    start=-max_abs_corrected,
+                    end=max_abs_corrected,
+                    size=max_abs_corrected/5  # Create ~10 contour levels
                 ),
                 hovertemplate=f'<b>X: %{{x:.1f}} mm, Y: %{{y:.1f}} mm</b><br>' +
                              'Corrected Delta: %{z:.1f} Å<extra></extra>',
@@ -632,16 +534,14 @@ class WaferMapAnalysis:
         # Add scatter points overlay for reference
         fig.add_trace(
             go.Scatter(
-                x=data[x_col],
-                y=data[y_col],
+                x=corrected_x_data,
+                y=corrected_y_data,
                 mode='markers',
                 marker=dict(size=3, color='white', opacity=0.7, line=dict(width=0.5, color='black')),
-                text=data['Corrected_Delta'].round(1),
-                customdata=data['Thickness_Delta'].round(1),
+                text=corrected_delta_data.round(1),
                 hovertemplate=f'<b>Measurement Point</b><br>' +
                              f'X: %{{x:.1f}} mm, Y: %{{y:.1f}} mm<br>' +
-                             'Corrected Delta: %{text} Å<br>' +
-                             'Original Delta: %{customdata} Å<extra></extra>',
+                             'Corrected Delta: %{text} Å<extra></extra>',
                 name='Measurement Points',
                 showlegend=False
             ),

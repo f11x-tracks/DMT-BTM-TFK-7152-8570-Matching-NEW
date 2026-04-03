@@ -1,9 +1,10 @@
-launch_dashboard.py - Main launcher/menu system
-thickness_comparison_app.py - DMT vs TFK analysis + generates data
-thickness_dashboard.py - Interactive web dashboard (DMT vs TFK only)
-btm_dmt_comparison.py - BTM vs DMT analysis
-btm_tfk_comparison.py - BTM vs TFK analysis
+** just run launch_dashboard.py and it will have a menu for other scripts
 
+run
+thickness_comparison_app - to create data used for other apps
+run 
+btm_dmt and btm_tfk comparisons
+run wafer_map_analys and wafer_map_analysis_contour
 
 # Thickness Measurement Comparison System
 
