@@ -46,14 +46,14 @@ BTM Tool:
   AANBD228TEH1:  8571.6 ±  22.7 Å (31 points)
 
 DMT Tool:
-  AANBD055TEC2:  8623.9 ±  22.0 Å (31 points)
-  AANBD067TEA4:  8624.2 ±  23.6 Å (31 points)
-  AANBD078TEB7:  8616.5 ±  19.5 Å (31 points)
-  AANBD103TEH2:  8617.0 ±  22.7 Å (31 points)
-  AANBD203TEG3:  8587.0 ±  25.7 Å (31 points)
-  AANBD205TEA1:  8586.8 ±  22.7 Å (31 points)
-  AANBD225TEB6:  8582.5 ±  23.0 Å (31 points)
-  AANBD228TEH1:  8579.3 ±  22.6 Å (31 points)
+  AANBD055TEC2:  8625.5 ±  24.0 Å (31 points)
+  AANBD067TEA4:  8625.8 ±  25.5 Å (31 points)
+  AANBD078TEB7:  8618.1 ±  21.1 Å (31 points)
+  AANBD103TEH2:  8618.7 ±  24.1 Å (31 points)
+  AANBD203TEG3:  8588.6 ±  27.8 Å (31 points)
+  AANBD205TEA1:  8588.4 ±  25.0 Å (31 points)
+  AANBD225TEB6:  8584.1 ±  25.1 Å (31 points)
+  AANBD228TEH1:  8580.9 ±  24.8 Å (31 points)
 
 TFK Tool:
   AANBD055TEC2:  8618.9 ±  25.6 Å (31 points)

@@ -171,7 +171,7 @@ class ThicknessComparisonApp:
         self.matched_data = pd.DataFrame(matched_pairs)
         print(f"\nTotal matched measurement pairs: {len(self.matched_data)}")
         
-        # Apply radial adjustment to DMT thickness data (add 20 to points > 146mm radius)
+        # Apply radial adjustment to DMT thickness data (add 50 to points > 146mm radius)
         if len(self.matched_data) > 0:
             print("\nApplying radial adjustment to DMT thickness data...")
             
@@ -183,14 +183,14 @@ class ThicknessComparisonApp:
             num_adjusted = radius_mask.sum()
             
             if num_adjusted > 0:
-                # Add 40 Å to DMT thickness for points > 146mm radius
-                self.matched_data.loc[radius_mask, 'DMT_Thickness'] += 40.0
+                # Add 50 Å to DMT thickness for points > 146mm radius
+                self.matched_data.loc[radius_mask, 'DMT_Thickness'] += 50.0
                 
                 # Recalculate thickness delta with adjusted DMT values
                 self.matched_data['Thickness_Delta'] = (self.matched_data['DMT_Thickness'] - 
                                                        self.matched_data['TFK_Thickness'])
                 
-                print(f"  Adjusted {num_adjusted} DMT thickness points (radius > 146mm) by +40 Å")
+                print(f"  Adjusted {num_adjusted} DMT thickness points (radius > 146mm) by +50 Å")
                 print(f"  Radius range of adjusted points: {dmt_radius[radius_mask].min():.1f} - {dmt_radius[radius_mask].max():.1f} mm")
             else:
                 print("  No DMT thickness points found with radius > 146mm")
